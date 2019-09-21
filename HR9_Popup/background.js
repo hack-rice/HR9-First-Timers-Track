@@ -1,17 +1,17 @@
 // background.js
 var visited = [];
 var whiteList = [];
-var blackList = [];
+var blackList = ["chrome://newtab/"];
 var time = 0;
-chrome.runtime.onInstalled.addListener(function() {
-  console.log("hello world");
-});
+// chrome.runtime.onInstalled.addListener(function() {
+//   console.log("hello world");
+// });
 
 chrome.extension.onConnect.addListener(function(port) {
   console.log("Connected .....");
+  port.postMessage("Greeting from backend");
   port.onMessage.addListener(function(msg) {
        console.log("message recieved " + JSON.stringify(msg));
-       port.postMessage("Hi Popup.js");
   });
 })
 
@@ -32,21 +32,22 @@ chrome.tabs.onCreated.addListener((tab)=>{
 })
 
 chrome.tabs.onActivated.addListener((info) => {
-  // alert('You just activated this tab ' + JSON.stringify(info));
+  chrome.tabs.query({active: true}, (lst)=> {
+    var curr = lst[0].url;
+    console.log(curr);
+    visited.push(curr);
+  })
 })
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-  alert("browser action is clicked");
-  visited.push(tab.url);
-  console.log(JSON.stringify(visited));
-});
-
-
 // chrome.browserAction.onClicked.addListener(function(tab) {
-//   console.log("browser action is clicked");
-  // Send a message to the active tab
-  // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //   var activeTab = tabs[0];
-  //   chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
-  // });
+//   alert("browser action is clicked");
+//   visited.push(tab.url);
+//   console.log(JSON.stringify(visited));
+// });
+// sendMessage();
+
+// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//   chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+//     console.log(response);
+//   });
 // });

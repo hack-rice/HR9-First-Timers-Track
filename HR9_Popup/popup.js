@@ -10,8 +10,8 @@ port.onMessage.addListener(function(msg) {
     console.log("message recieved" + msg);
 });
 
-// document.getElementById("time").addEventListener("change", (e)=> {this.value=e})
-document.getElementById("interfaceMsg").addEventListener("submit", (contents) => {
+document.getElementById("time").addEventListener("change", (e)=> {this.value=e})
+document.getElementById("btn").addEventListener("click", (contents) => {
     var time = document.getElementById("time").value;
-    port.postMessage(JSON.stringify(time));
+    port.postMessage(time);
 })
