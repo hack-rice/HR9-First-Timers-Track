@@ -6,10 +6,6 @@ var port = chrome.extension.connect({
 
 port.postMessage("from content")
 
-// port.onMessage.addListener(function(msg) {
-//     console.log("message recieved " + msg);
-// });
-
 port.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log(sender.tab ?
@@ -19,7 +15,6 @@ port.onMessage.addListener(
         port.postMessage("Content End received");
         console.log(request === "Greeting from backend");
         if (request === "Greeting from backend") {
-            console.log("here");
             document.body.innerHTML += "<dialog>You shouldn't visit this page at this moment.<br><button>Close</button></dialog>";
             var dialog = document.querySelector("dialog")
             dialog.querySelector("button").addEventListener("click", function() {

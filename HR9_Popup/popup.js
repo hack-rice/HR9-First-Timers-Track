@@ -14,4 +14,5 @@ document.getElementById("time").addEventListener("change", (e)=> {this.value=e})
 document.getElementById("btn").addEventListener("click", (contents) => {
     var time = document.getElementById("time").value;
     port.postMessage(time);
+    port.postMessage("Start Timing");
 })
