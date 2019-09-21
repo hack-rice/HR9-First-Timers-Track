@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(function() {
 chrome.extension.onConnect.addListener(function(port) {
   console.log("Connected .....");
   port.onMessage.addListener(function(msg) {
-       console.log("message recieved " + msg);
+       console.log("message recieved " + JSON.stringify(msg));
        port.postMessage("Hi Popup.js");
   });
 })
