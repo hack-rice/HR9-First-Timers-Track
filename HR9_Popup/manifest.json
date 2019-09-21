@@ -23,7 +23,6 @@
 		  "activeTab",
 		  "storage",
 		  "tabs",
-		  "webNavigation",
-		  "notifications"
+		  "webNavigation"
   	]
 }
