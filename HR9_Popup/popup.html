@@ -10,19 +10,35 @@
 	<div class="container" style="margin: 10px">
 		<p>Chrome Note Taker <span class="badge badge-secondary">New</span></p>
 		<form id="interfaceMsg">
-				<div class="form-group">
+
+				<div class="form-group" id="inputTime">
 				  <label for="timeLImit">Set Time Limit</label>
 				  <input type="text" class="form-control" id="time" placeholder="20">
 				</div>
-				<div class="form-group">
+
+				<div class="form-group" id="inputWhite">
 				  <label for="exampleInputPassword1">WhiteList Test</label>
 				  <input type="text" class="form-control" id="whiteList" placeholder="Rice.edu">
 				</div>
-				<div class="form-group">
+
+				<button type="button" class="btn btn-secondary" id="addWhite" onclick="addWFunction()">Submit</button>
+
+				<div class="dsply-group" id="dsplyWhite">
+				</div>
+
+				<div id="inputBlack">
 						<label for="exampleInputPassword1">BlackList Test</label>
 						<input type="text" class="form-control" id="BlackList" placeholder="Youtube.com">
-					  </div>
-				<button type="submit" class="btn btn-primary" id="btn">Start Focus</button>
+				</div>
+
+				<button type="button" class="btn btn-secondary" id="addBlack" onclick="addBFunction()">Submit</button>
+
+				<div class="dsply-group" id="dsplyBlack">
+				</div>
+
+				<div>
+				        <button type="submit" class="btn btn-primary" id="btn">Start Focus</button>
+			    </div>
 			  </form>
 	</div>
 	<script src="popup.js"></script>
