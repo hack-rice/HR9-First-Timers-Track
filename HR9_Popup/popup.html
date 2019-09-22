@@ -10,19 +10,35 @@
 	<div class="container" style="margin: 10px">
 		<p>Focus on Chrome</p>
 		<form id="interfaceMsg">
-				<div class="form-group">
+
+				<div class="form-group" id="inputTime">
 				  <label for="timeLImit">Set Time Limit</label>
 				  <input type="number" class="form-control" id="time">
 				</div>
-				<div class="form-group">
-				  <label for="exampleInputPassword1">WhiteList Test</label>
+
+				<div class="form-group" id="inputWhite">
+				  <label for="exampleInputPassword1">Add Links of the websites you need to work on</label>
 				  <input type="text" class="form-control" id="whiteList" placeholder="Rice.edu">
 				</div>
-				<div class="form-group">
-						<label for="exampleInputPassword1">BlackList Test</label>
+
+				<button type="button" class="btn btn-secondary" id="addWhite">+</button>
+
+				<div class="dsply-group" id="dsplyWhite">
+				</div>
+
+				<div id="inputBlack">
+						<label for="exampleInputPassword1">BlackList</label>
 						<input type="text" class="form-control" id="BlackList" placeholder="Youtube.com">
-					  </div>
-				<button class="btn btn-primary" id="btn">Start Focus</button>
+				</div>
+
+				<button type="button" class="btn btn-secondary" id="addBlack">Submit</button>
+
+				<div class="dsply-group" id="dsplyBlack">
+				</div>
+
+				<div>
+				        <button type="submit" class="btn btn-primary" id="btn">Start Focus</button>
+			    </div>
 			  </form>
 	</div>
 	<script src="popup.js"></script>
