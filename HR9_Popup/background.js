@@ -45,7 +45,7 @@ chrome.extension.onConnect.addListener(function(port) {
 
 //probably will delete this handler later, for user will stay on the same page after updating
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  console.log(timing)
+  // console.log(timing)
   if (timing) {
     if (tab.url !== "chrome://newtab/") {
       // do whatever
@@ -56,7 +56,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 chrome.tabs.onCreated.addListener((tab)=>{
-  console.log(timing)
+  // console.log(timing)
   if (timing) {
     if (tab.url !== "chrome://newtab/") {
       // alert('you just created a new tab ' + JSON.stringify(tab.url));
@@ -68,7 +68,6 @@ chrome.tabs.onCreated.addListener((tab)=>{
 
 
 chrome.tabs.onActivated.addListener(function() {
-  console.log(timing)
   if (timing) {
     chrome.tabs.query({active: true}, (lst)=> {
       var curr = lst[0].url;
@@ -110,14 +109,3 @@ function setTime(time) {
 function matchUrl(url, whiteList) {
   return false;
 }
-
-// function toMiliseconds(min) {
-//   var num = parseInt(min);
-//   // num = num*60*1000;
-//   console.log(num)
-//   return num;
-// }
-
-// function sendMsg(tab, msg) {
-//   chrome.tabs.sendMessage(tab, msg); 
-// }
