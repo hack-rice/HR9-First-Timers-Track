@@ -14,20 +14,42 @@ console.log("content script activated");
 // });
 
 // console.log("url: " + JSON.stringify(document));
-var port = chrome.runtime.connect({
-    name: "Content -> Background"
-});
+// var port = chrome.runtime.connect({
+//     name: "Content -> Background"
+// });
+// port.postMessage("from content")
+var port;
+var reconnectToExtension = function () {
+//     // Reset port
+    port = null;
+//     // Attempt to reconnect after 1 second
+    setTimeout(connectToExtension, 100 * 1);
+};
 
-port.postMessage("from content")
+var connectToExtension = function () {
 
+//     // Make the connection
+    port = chrome.runtime.connect({name: "Content -> Background"});
+    port.postMessage("from content")
+//     // When extension is upgraded or disabled and renabled, the content scripts
+//     // will still be injected, so we have to reconnect them.
+//     // We listen for an onDisconnect event, and then wait for a second before
+//     // trying to connect again. Becuase chrome.runtime.connect fires an onDisconnect
+//     // event if it does not connect, an unsuccessful connection should trigger
+//     // another attempt, 1 second later.
+    port.onDisconnect.addListener(reconnectToExtension);
+};
+
+connectToExtension();
 // chrome.runtime.onMessage.addListener(
 //     function(request, sender, sendResponse) {
-//       console.log(sender.tab ?
+//         console.log(request);
+//         console.log(sender.tab ?
 //                   "from a content script:" + sender.tab.url :
 //                   "from the extension");
 //       if (request.greeting == "hello")
 //         sendResponse({farewell: "goodbye"});
-//     });
+//  });
 
 port.onMessage.addListener(
     function(request, sender, sendResponse) {

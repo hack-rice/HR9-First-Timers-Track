@@ -23,6 +23,7 @@
 		  "activeTab",
 		  "storage",
 		  "tabs",
-		  "webNavigation"
+		  "webNavigation",
+		  "*://*/*"
   	]
 }

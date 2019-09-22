@@ -34,15 +34,8 @@ function removeElem(id) {
     whiteList.splice(id,1);
     loadList();
 }
-// var port = chrome.extension.connect({
-//     name: "Popup -> Background"
-// });
-// port.postMessage("Hi BackGround");
-// port.onMessage.addListener(function(msg) {
-//     console.log("message recieved" + msg);
-// });
 
-
+//initiate port connection
 var port = chrome.extension.connect({
     name: "Popup -> Background"
 });
@@ -51,10 +44,19 @@ port.postMessage("Hi BackGround");
 // port.onMessage.addListener(function(msg) {
 //     console.log("message recieved" + msg);
 // });
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      console.log(sender.tab ?
+                  "from a content script:" + sender.tab.url :
+                  "from the extension");
+      if (request.greeting == "hello")
+        sendResponse({farewell: "goodbye"});
+});
+
 document.getElementById("time").addEventListener("change", (e)=> {this.value=e})
 document.getElementById("btn").addEventListener("click", (contents) => {
     var time = document.getElementById("time").value;
-    port.postMessage({"purpose": "Start Timing", "time": time});
+    port.postMessage({"purpose": "Start Timing", "time": time, "lst": whiteList});
 })
 
 

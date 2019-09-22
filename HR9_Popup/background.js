@@ -6,15 +6,27 @@ var blackList = ["chrome://newtab/"];
 var time = 8;
 var timing = false;
 var currentUrl = "";
+var currTab = "";
 // var port = chrome.runtime.connect({
 //   name: "Popup -> Background"
 // });
+
+
+chrome.tabs.query({active: true}, (lst)=> {
+    var curr = lst[0].id;
+    currTab = curr;
+    console.log(curr);
+    chrome.tabs.reload(curr)
+    // for (tab of lst) {
+    //   chrome.tabs.executeScript(tab.id, {file: "content.js"});
+    // }
+})
 
 //port open for content.js
 // var toContent = chrome.runtime.connect({name: "Background -> Content"});
 // Window.contentPort = toContent;
 // toContent.postMessage("Greeting From Background");
-
+// toContent.onDisconnect.addListener(()=> {console.log("disconnected")})
 // toContent.onMessage.addListener(function(msg) {
 //   console.log(msg);
 // });
@@ -27,6 +39,8 @@ chrome.extension.onConnect.addListener(function(port) {
       console.log('msg time: ' + msg.time)
       console.log('time ' + parseInt(msg.time))
       if (msg.purpose === "Start Timing") {
+          whiteList = msg.lst;
+          console.log(whiteList);
           setTime(parseInt(msg.time)*60*1000);
         }
       });
@@ -47,10 +61,10 @@ chrome.extension.onConnect.addListener(function(port) {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // console.log(timing)
   if (timing) {
-    if (tab.url !== "chrome://newtab/") {
-      // do whatever
+    if (matchUrl(tab.url)) {
+      Window.toContent.postMessage("From Background");
     }
-    Window.toContent.postMessage("From Background");
+    
     visited.push(tab.url);
   }
 });
@@ -58,7 +72,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 chrome.tabs.onCreated.addListener((tab)=>{
   // console.log(timing)
   if (timing) {
-    if (tab.url !== "chrome://newtab/") {
+    if (matchUrl(tab.url)) {
       // alert('you just created a new tab ' + JSON.stringify(tab.url));
     }
     Window.toContent.postMessage("From Background");
@@ -71,8 +85,11 @@ chrome.tabs.onActivated.addListener(function() {
   if (timing) {
     chrome.tabs.query({active: true}, (lst)=> {
       var curr = lst[0].url;
-      console.log("activated");
-      Window.toContent.postMessage("From Background");
+      if (matchUrl(curr)) {
+        console.log("activated : "+curr); 
+        // sendMsgToContent(lst[0].id);
+        Window.toContent.postMessage("From Background"); 
+      }
       visited.push(curr);
     })
   }
@@ -106,6 +123,23 @@ function setTime(time) {
   setTimeout(function(){ if (timing) {timing=false, alert("Congratulation on finishing your focus!");} }, time);
 }
 
-function matchUrl(url, whiteList) {
-  return false;
+function matchUrl(url) {
+  for (str in whiteList) {
+    if (str.includes(url)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function sendMsgToContent(id) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(id, {meg: "From Background"}, function(response) {
+      if (response != undefined) {
+        resolve(response)} else {
+          reject(response);
+        }
+      })
+  
+}).catch((err)=> {console.log(err)})
 }
