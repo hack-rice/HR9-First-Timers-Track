@@ -1,26 +1,49 @@
 // background.js
-var visited = [];
-var whiteList = [];
-var blackList = [];
-var time = 0;
-chrome.runtime.onInstalled.addListener(function() {
-  console.log("hello world");
-});
 
-chrome.extension.onConnect.addListener(function(port) {
-  console.log("Connected .....");
-  port.onMessage.addListener(function(msg) {
-       console.log("message recieved " + JSON.stringify(msg));
-       port.postMessage("Hi Popup.js");
-  });
+var visited = [];
+var whiteList = ["chrome://newtab/"];
+var blackList = ["chrome://newtab/"];
+var time = 8;
+var timing = false;
+// var externalPort = null;
+var currentUrl = "";
+// var port = chrome.runtime.connect({
+//   name: "Popup -> Background"
+// });
+
+// chrome.extension.onConnect.addListener(function(port) {
+//   console.log("Connected .....");
+//   port.postMessage(JSON.stringify(whiteList));
+
+//   port.onMessage.addListener(function(msg) {
+//        console.log("message recieved " + JSON.stringify(msg));
+//        if (msg === "Start Timing") {
+//          setTime();
+//        }
+//   });
+// })
+
+chrome.tabs.onActivated.addListener((info) => {
+  chrome.tabs.query({active: true}, (lst)=> {
+    var curr = lst[0].url;
+    console.log("current webpage" + curr);
+    currentUrl = curr;
+    visited.push(curr);
+    if (!matchUrl(curr, whiteList)) {
+      chrome.tabs.sendMessage(lst[0].id, "Unrelated Page", {keyword: "Unrelated Page"}, (response)=> {
+        console.log(response);
+      }); 
+      // port.postMessage("Unrelated Page");
+    }
+  })
 })
 
+//probably will delete this handler later, for user will stay on the same page after updating
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (tab.url !== "chrome://newtab/") {
-    // alert('Your page is updated to id:'+ JSON.stringify(tabId) +"tab url: " +  JSON.stringify(tab.url));
+    // do whatever
   }
   visited.push(tab.url);
-  console.log(JSON.stringify(visited));
 });
 
 chrome.tabs.onCreated.addListener((tab)=>{
@@ -28,25 +51,35 @@ chrome.tabs.onCreated.addListener((tab)=>{
     // alert('you just created a new tab ' + JSON.stringify(tab.url));
   }
   visited.push(tab.url);
-  console.log(JSON.stringify(visited));
 })
 
-chrome.tabs.onActivated.addListener((info) => {
-  // alert('You just activated this tab ' + JSON.stringify(info));
-})
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    console.log(request);
+    if (request.greeting == "hello")
+      sendResponse({farewell: "goodbye"});
+  });
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-  alert("browser action is clicked");
-  visited.push(tab.url);
-  console.log(JSON.stringify(visited));
-});
-
-
-// chrome.browserAction.onClicked.addListener(function(tab) {
-//   console.log("browser action is clicked");
-  // Send a message to the active tab
-  // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //   var activeTab = tabs[0];
-  //   chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
-  // });
+// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//   chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+//     console.log(response);
+//   });
 // });
+
+//===============================utils=================================
+
+function setTime() {
+  timing = true;
+  setTimeout(function(){ timing=false, alert("Congratulation on finishing your focus!"); }, 3000);
+}
+
+function matchUrl(url, whiteList) {
+  return false;
+}
+
+// function sendMsg(tab, msg) {
+//   chrome.tabs.sendMessage(tab, msg); 
+// }

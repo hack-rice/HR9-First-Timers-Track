@@ -11,7 +11,6 @@ var id_B_site = 0;
 // port.onMessage.addListener(function(msg) {
 //     console.log("message recieved" + msg);
 // });
-
 // // document.getElementById("time").addEventListener("change", (e)=> {this.value=e})
 // document.getElementById("interfaceMsg").addEventListener("submit", (contents) => {
 //     var time = document.getElementById("time").value;
