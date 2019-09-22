@@ -22,8 +22,11 @@ function addWFunction(){
     var text = document.getElementById("whiteList").value;
     whiteList.push(text);
     var li = document.createElement('li');
-    li.innerHTML = "<label id='new_url'>" + text+ "</label>" + "<button id='deleW' type='button' onclick='deleteChild(this)'>Delete</button>";
+    li.innerHTML = "<div> <label>" + text+ "</label> <input class='DeleteThis' type='button' value='Delete' /> </div>";
     document.getElementById("dsplyWhite").appendChild(li);
+
+    deleteChild();
+
 
     // chrome.storage.sync.set({'id_W_site': text}, function(){
     //     console.log("URL: " + text + "is saved.");
@@ -36,14 +39,21 @@ function addBFunction(){
     var text = document.getElementById("BlackList").value;
     blackList.push(text);
     var li = document.createElement('li');
-    li.innerHTML = "<label id='ou'>" + text+ "</label>";
+    li.innerHTML = "<div> <label>" + text+ "</label> <input class='DeleteThis' type='button' value='Delete' /> </div>";
     document.getElementById("dsplyBlack").appendChild(li);
+
+    deleteChild();
+    
 }
 
 
+function deleteChild(){
+    var elements = document.getElementsByClassName("DeleteThis");
+    for(var i=0; i<elements.length; i++){
+        elements[i].addEventListener("click", function(event){
+            console.log(event);
+            event.target.parentNode.remove();
+        })
+    }
 
-
-function deleteChild(button){
-    button.remove();
-    return false;
  }
