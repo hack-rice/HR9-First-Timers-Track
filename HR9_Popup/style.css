@@ -1,0 +1,47 @@
+#interfaceMsg {
+  align-content: center;
+  
+}
+
+
+body {
+	height: 100px;
+  width: 250px;
+  background-color:whitesmoke;
+  align-content: center;
+}
+
+
+#inputTime{
+  align-self: center;
+  margin: auto;
+}
+
+#whiteList {
+  font-size: 20px;
+  border: 1px solid grey;
+}
+
+#BlackList {
+  font-size: 20px;
+  border: 1px solid grey;
+}
+
+#time {
+  font-size: 20px;
+  border: 1px solid grey;
+  background-image: url('searchicon.png');
+
+}
+
+
+
+
+#ou {
+  background-color: lightsteelblue;
+  border-radius: 30px;
+  height: 30px;
+
+}
+
+

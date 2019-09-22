@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Extension Name</title>
+	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="container" style="margin: 10px">
+		<p>Chrome Note Taker <span class="badge badge-secondary">New</span></p>
+		<form id="interfaceMsg">
+
+				<div class="form-group" id="inputTime">
+				  <label for="timeLImit">Set Time Limit</label>
+				  <input type="text" class="form-control" id="time" placeholder="20">
+				</div>
+
+				<div class="form-group" id="inputWhite">
+				  <label for="exampleInputPassword1">WhiteList Test</label>
+				  <input type="text" class="form-control" id="whiteList" placeholder="Rice.edu">
+				</div>
+
+				<button type="button" class="btn btn-secondary" id="addWhite" onclick="addWFunction()">Submit</button>
+
+				<div class="dsply-group" id="dsplyWhite">
+				</div>
+
+				<div id="inputBlack">
+						<label for="exampleInputPassword1">BlackList Test</label>
+						<input type="text" class="form-control" id="BlackList" placeholder="Youtube.com">
+				</div>
+
+				<button type="button" class="btn btn-secondary" id="addBlack" onclick="addBFunction()">Submit</button>
+
+				<div class="dsply-group" id="dsplyBlack">
+				</div>
+
+				<div>
+				        <button type="submit" class="btn btn-primary" id="btn">Start Focus</button>
+			    </div>
+			  </form>
+	</div>
+	<script src="popup.js"></script>
+</body>
+</html>
