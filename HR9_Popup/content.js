@@ -32,14 +32,21 @@ port.postMessage("from content")
 port.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log("content: " + JSON.stringify(request));
-        console.log(request === "From Background");
+        // console.log(request === "From Background");
         if (request === "From Background") {
-            document.body.innerHTML += "<dialog>You shouldn't visit this page at this moment.<br><button>Close</button></dialog>";
-            var dialog = document.querySelector("dialog")
-            dialog.querySelector("button").addEventListener("click", function() {
-                dialog.close()
+            var div=document.createElement("dialog"); 
+            document.body.appendChild(div); 
+            div.innerHTML="<p>You haven't passed your focus time, are you sure you want to proceed?</p><button id='terminate'>Terminate Timing</button><button id='proceed'>Proceed</button>";
+            // document.body.innerHTML += "<dialog>You shouldn't visit this page at this moment.<br><button>Close</button></dialog>";
+            var term = document.querySelector('#terminate');
+            term.addEventListener("click", function() {
+                port.postMessage("Terminate")
+                div.close()
             })
-            dialog.showModal()
-            
+            var proceed = document.querySelector("#proceed");
+            proceed.addEventListener("click", function(){
+                div.close();
+            })
+            div.showModal()
         }
 });

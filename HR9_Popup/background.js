@@ -35,12 +35,17 @@ chrome.extension.onConnect.addListener(function(port) {
     console.log("Connected to Content")
     port.onMessage.addListener(function(msg) {
       console.log('msg from Content: ' + msg)
+      if (msg === "Terminate") {
+        timing = false;
+        alert("Focus Terminated");
+      }
     });
   }
 })
 
 //probably will delete this handler later, for user will stay on the same page after updating
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  console.log(timing)
   if (timing) {
     if (tab.url !== "chrome://newtab/") {
       // do whatever
@@ -51,6 +56,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 chrome.tabs.onCreated.addListener((tab)=>{
+  console.log(timing)
   if (timing) {
     if (tab.url !== "chrome://newtab/") {
       // alert('you just created a new tab ' + JSON.stringify(tab.url));
@@ -62,6 +68,7 @@ chrome.tabs.onCreated.addListener((tab)=>{
 
 
 chrome.tabs.onActivated.addListener(function() {
+  console.log(timing)
   if (timing) {
     chrome.tabs.query({active: true}, (lst)=> {
       var curr = lst[0].url;
@@ -97,7 +104,7 @@ function setTime(time) {
     return
   } 
   timing = true;
-  setTimeout(function(){ timing=false, alert("Congratulation on finishing your focus!"); }, time);
+  setTimeout(function(){ if (timing) {timing=false, alert("Congratulation on finishing your focus!");} }, time);
 }
 
 function matchUrl(url, whiteList) {
