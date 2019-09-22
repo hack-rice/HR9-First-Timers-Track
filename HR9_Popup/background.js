@@ -5,7 +5,6 @@ var whiteList = ["chrome://newtab/"];
 var blackList = ["chrome://newtab/"];
 var time = 8;
 var timing = false;
-// var externalPort = null;
 var currentUrl = "";
 // var port = chrome.runtime.connect({
 //   name: "Popup -> Background"
@@ -25,8 +24,12 @@ chrome.extension.onConnect.addListener(function(port) {
   if (port.name === "Popup -> Background") {
     console.log("Connected to popup");
     port.onMessage.addListener(function(msg) {
-      console.log('msg from popup: ' + msg)
-    });
+      console.log('msg time: ' + msg.time)
+      console.log('time ' + parseInt(msg.time))
+      if (msg.purpose === "Start Timing") {
+          setTime(parseInt(msg.time)*60*1000);
+        }
+      });
   } else if (port.name === "Content -> Background") {
     Window.toContent = port;
     console.log("Connected to Content")
@@ -34,40 +37,39 @@ chrome.extension.onConnect.addListener(function(port) {
       console.log('msg from Content: ' + msg)
     });
   }
-
-  // port.onMessage.addListener(function(msg) {
-  //      console.log("message recieved " + JSON.stringify(msg));
-  //      if (msg === "Start Timing") {
-  //        setTime();
-  //      }
-  // });
 })
 
 //probably will delete this handler later, for user will stay on the same page after updating
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  if (tab.url !== "chrome://newtab/") {
-    // do whatever
+  if (timing) {
+    if (tab.url !== "chrome://newtab/") {
+      // do whatever
+    }
+    Window.toContent.postMessage("From Background");
+    visited.push(tab.url);
   }
-  Window.toContent.postMessage("From Background");
-  visited.push(tab.url);
 });
 
 chrome.tabs.onCreated.addListener((tab)=>{
-  if (tab.url !== "chrome://newtab/") {
-    // alert('you just created a new tab ' + JSON.stringify(tab.url));
+  if (timing) {
+    if (tab.url !== "chrome://newtab/") {
+      // alert('you just created a new tab ' + JSON.stringify(tab.url));
+    }
+    Window.toContent.postMessage("From Background");
+    visited.push(tab.url);
   }
-  Window.toContent.postMessage("From Background");
-  visited.push(tab.url);
 })
 
 
 chrome.tabs.onActivated.addListener(function() {
-  chrome.tabs.query({active: true}, (lst)=> {
-    var curr = lst[0].url;
-    console.log("activated");
-    Window.toContent.postMessage("From Background");
-    visited.push(curr);
-  })
+  if (timing) {
+    chrome.tabs.query({active: true}, (lst)=> {
+      var curr = lst[0].url;
+      console.log("activated");
+      Window.toContent.postMessage("From Background");
+      visited.push(curr);
+    })
+  }
 })
 
 
@@ -89,14 +91,25 @@ chrome.tabs.onActivated.addListener(function() {
 
 //===============================utils=================================
 
-function setTime() {
+function setTime(time) {
+  if (time <= 0 || time== undefined || time===NaN) {
+    alert("invalid time input");
+    return
+  } 
   timing = true;
-  setTimeout(function(){ timing=false, alert("Congratulation on finishing your focus!"); }, 3000);
+  setTimeout(function(){ timing=false, alert("Congratulation on finishing your focus!"); }, time);
 }
 
 function matchUrl(url, whiteList) {
   return false;
 }
+
+// function toMiliseconds(min) {
+//   var num = parseInt(min);
+//   // num = num*60*1000;
+//   console.log(num)
+//   return num;
+// }
 
 // function sendMsg(tab, msg) {
 //   chrome.tabs.sendMessage(tab, msg); 
